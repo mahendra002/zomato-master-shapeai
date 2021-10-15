@@ -1,0 +1,35 @@
+sudo: required
+
+#install Docker
+services:
+  - docker
+
+script:
+  - echo "Hello Guys!!!"
+
+after_success:
+  # build all the docker files
+  - docker build -t mahileton/zomato-shapeai-client ./client
+  - docker build -t mahileton/zomato-shapeai-server ./server
+  - docker build -t mahileton/zomato-shapeai-nginx ./nginx
+
+  #log in docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  #push to docker hub
+  - docker push mahileton/zomato-shapeai-client
+  - docker push mahileton/zomato-shapeai-server
+  - docker push mahileton/zomato-shapeai-nginx
+
+deploy:
+  #deploy to AWS EBS
+  provider: elasticbeanstalk
+  region: ap-south-1
+  app: Zomato-clone-shapeai
+  env: zomatocloneshapeai-env
+  bucket_name: elasticbeanstalk-ap-south-1-70199440897
+  bucket_path: zomato
+  on:
+    branch: master
+  access_key_id: $AWS_KEY
+  secret_access_key: $AWS_SECRET

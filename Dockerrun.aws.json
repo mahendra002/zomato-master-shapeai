@@ -1,0 +1,25 @@
+{
+    "AWSEBDockerrunVersion":2,
+    "containerDefinitions":[
+        {
+            "name":"client",
+            "image":"mahileton/zomato-shapeai-client",
+            "essentials":false,
+            "memory":128
+        },
+        {
+            "name":"nodeserver",
+            "image":"mahileton/zomato-shapeai-client",
+            "essentials":false,
+            "memory":128
+        },
+        {
+            "name":"nginx",
+            "image":"mahileton/zomato-shapeai-client",
+            "essentials":true,
+            "portMappings":[{"hostPort":80,"containerPort":80}],
+            "links":["client","nodeserver"],
+            "memory":128
+        }
+    ]
+}
